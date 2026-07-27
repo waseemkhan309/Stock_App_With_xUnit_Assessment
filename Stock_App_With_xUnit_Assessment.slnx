@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="StockappTest/StockappTest.csproj" />
+  <Project Path="Stock_app/Stock_app.csproj" />
+</Solution>
