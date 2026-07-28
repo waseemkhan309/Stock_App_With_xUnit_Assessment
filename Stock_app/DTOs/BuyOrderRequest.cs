@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Stock_app.CustomPropertyValidation;
+﻿using Stock_app.CustomPropertyValidation;
+using Stock_app.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Stock_app.DTOs
 {
-    public class BuyOrderRequest
+    public class BuyOrderRequest : IValidatableObject
     {
         [Required(ErrorMessage = "Stock Symbol is required.")]
         public string StockSymbol { get; set; }
@@ -15,11 +16,42 @@ namespace Stock_app.DTOs
         public DateTime DateAndTimeOfOrder { get; set; }
 
         [Range(1,100000, ErrorMessage = "Value should be between 1 and 100000")]
-        public int Quantity { get; set; }
+        public uint Quantity { get; set; }
 
 
         [Range(1, 10000, ErrorMessage = "Value should be between 1 and 10000")]
         public double Price { get; set; }
 
+
+
+
+        /// <summary>
+        /// Converts the current object of BuyOrderRequest into a new object of BuyOrder type
+        /// </summary>
+        /// <returns>A new object of BuyOrder class</returns>
+        public BuyOrder ToBuyOrder()
+        {
+            //create a new object of BuyOrder class
+            return new BuyOrder() { StockSymbol = StockSymbol, StockName = StockName, Price = Price, DateAndTimeOfOrder = DateAndTimeOfOrder, Quantity = Quantity };
+        }
+
+
+        /// <summary>
+        /// Model class-level validation using IValidatableObject
+        /// </summary>
+        /// <param name="validationContext">ValidationContext to validate</param>
+        /// <returns>Returns validation errors as ValidationResult</returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            List<ValidationResult> results = new List<ValidationResult>();
+
+            //Date of order should be less than Jan 01, 2000
+            if (DateAndTimeOfOrder < Convert.ToDateTime("2000-01-01"))
+            {
+                results.Add(new ValidationResult("Date of the order should not be older than Jan 01, 2000."));
+            }
+
+            return results;
+        }
     }
 }
