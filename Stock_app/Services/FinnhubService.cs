@@ -45,7 +45,7 @@ namespace Stock_app.Services
 
             if (responseDictionary.ContainsKey("error"))
             {
-                throw new InvalidOperationException(Convert.ToString( responseDictionary["error"]));
+                throw new InvalidOperationException(Convert.ToString(responseDictionary["error"]));
             }
 
             return responseDictionary;
